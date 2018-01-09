@@ -1,0 +1,110 @@
+<div id="wrapper">
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top idt-green" role="navigation" style="margin-bottom: 0" ng-controller="NavbarController as navbar" ng-init="navbar.init()">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand white" href="#/home">Ideyatech Exam App Admin Dashboard</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <!-- /.dropdown -->
+            <li class="dropdown"  uib-dropdown is-open="status.isopen">
+                <a id="dropdown-btn" class="dropdown-toggle white" uib-dropdown-toggle ng-disabled="disabled">{{user.currentUser}}
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="dropdown-btn">
+                    <li role="menuitem">
+                        <a href="#/home"><i class="fa fa-user fa-fw"></i> Account </a>
+                    </li>
+                    <li role="menuitem"><a href="#/settings">
+                        <i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-click="processLogout()">
+                        <a><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="#/home" class="black"><i class="fa fa-home fa-fw"></i> Home</a>
+                    </li>
+                    <li>
+                        <a href="#/categories" class="black"><i class="fa fa-tasks fa-fw"></i> Categories</a>
+                    </li>
+                    <li>
+                        <a href="#/questions" class="black"><i class="fa fa-bar-chart-o fa-fw"></i> Questions</a>
+                    </li>
+                    <li>
+                        <a href="#/exams" class="black active"><i class="fa fa-file-text fa-fw"></i> Exam Sets</a>
+                    </li>
+                    <li>
+                        <a href="#/applicants" class="black"><i class="fa fa-list-alt fa-fw"></i> Applicants</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+    
+    <!-- Page Content -->
+    <div id="page-wrapper" ng-init="loadExams()">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header">{{exam.val().name}}</h2>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!--/ Header -->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="col-md-7">Question</th>
+                                <th class="col-md-2">Category</th>
+                                <th>Level of Difficulty</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="!loadedExamSet">
+                                <td colspan="4" ><div class="loader"></div></td>
+                            </tr>
+                            <tr ng-repeat="question in questions" id="question.key" ng-if="!isEmpty">
+                                <td>{{question.val().question}}</td>
+                                <td>{{question.val().category_name}}</td>
+                                <td>{{question.val().level}}</td>
+                                <td>{{question.val().type}}</td>
+                            </tr>
+                            <tr ng-if="isEmpty">
+                                <td colspan="4" class="center">No questions found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--/ Page Content-->
+
+</div>

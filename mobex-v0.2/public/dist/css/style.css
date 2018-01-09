@@ -1,0 +1,134 @@
+
+.black {
+    color: black;
+}
+
+.idt-green {
+    background-color: #699A20 !important;
+}
+
+.white {
+    color: #FFFFFF !important;
+}
+
+.black {
+    color: black !important;
+}
+
+.header-page {
+    margin-top: 40px;
+}
+
+.header-break {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.btn-circle {
+    border-radius: 50%;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.no-borders > tr > td {
+    border: 0px !important;
+}
+
+/* 
+Table detail styles
+*/
+
+.applicant-name {
+    font-size: 20px;
+}
+
+.applicant-position {
+    font-size: 20px;
+    font-weight: 700;
+    color: #699A20;
+}
+
+.total-score {
+    font-weight: 700;
+}
+
+.incorrect-answer {
+    color: #ff0000;
+}
+
+.result-passed {
+    font-weight: 700;
+    color: #699A20;
+}
+
+.result-conditional-pass {
+    font-weight: 700;
+    color: #F0C120
+}
+
+.result-failed {
+    font-weight: 700;
+    color: #ff0000;
+}
+
+.loader {
+    border: 16px solid #f3f3f3 !important; /* Light grey */
+    border-top: 16px solid #3498db !important; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.loader-small-blue {
+    border: 7px solid #f3f3f3 !important; /* Light grey */
+    border-top: 7px solid #3498db !important; /* Blue */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+}
+
+.loader-small-green {
+    border: 7px solid #f3f3f3 !important; /* Light grey */
+    border-top: 7px solid #95EA73 !important; /* Green */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+}
+
+.loader-small-orange {
+    border: 7px solid #f3f3f3 !important; /* Light grey */
+    border-top: 7px solid #F1BD55 !important; /* Green */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+}
+
+.loader-small-red {
+    border: 7px solid #f3f3f3 !important; /* Light grey */
+    border-top: 7px solid #EF5A5A !important; /* Green */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

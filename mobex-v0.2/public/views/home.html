@@ -1,0 +1,177 @@
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top idt-green" role="navigation" style="margin-bottom: 0" ng-controller="NavbarController as navbar" ng-init="navbar.init()">
+        
+        <div class="navbar-header">
+            <a class="navbar-brand white" href="#/home">Ideyatech Exam App Admin Dashboard</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <!-- /.dropdown -->
+            <li class="dropdown"  uib-dropdown is-open="status.isopen">
+                <a id="dropdown-btn" class="dropdown-toggle white" uib-dropdown-toggle ng-disabled="disabled">{{user.currentUser}}
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="dropdown-btn">
+                    <li role="menuitem">
+                        <a href="#/home"><i class="fa fa-user fa-fw"></i> Account </a>
+                    </li>
+                    <li role="menuitem"><a href="#/settings">
+                        <i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-click="processLogout()">
+                        <a><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a class="black active" href="#/home"><i class="fa fa-home fa-fw"></i> Home</a>
+                    </li>
+                    <li>
+                        <a class="black" href="#/categories"><i class="fa fa-tasks fa-fw"></i> Categories</a>
+                    </li>
+                    <li>
+                        <a href="#/questions" class="black"><i class="fa fa-bar-chart-o fa-fw"></i> Questions</a>
+                    </li>
+                    <li>
+                        <a href="#/exams" class="black"><i class="fa fa-file-text fa-fw"></i> Exam Sets</a>
+                    </li>
+                    <li>
+                        <a class="black" href="#/applicants"><i class="fa fa-list-alt fa-fw"></i> Applicants</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+    
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="page-header">Welcome Admin</h2>
+            </div>
+            <!-- /.col-md-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary" ng-init="loadCategories()">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-tasks fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{categoryCount}}</div>
+                                <div ng-if="!loadedCategoryCount" class="loader-small-blue"></div>
+                                <div>Categories</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#/categories">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-green" ng-init="loadQuestions()">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-bar-chart-o fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{questionCount}}</div>
+                                <div ng-if="!loadedQuestionCount" class="loader-small-green"></div>
+                                <div>Questions</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#/questions">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow" ng-init="loadApplicants()">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-list-alt fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{applicantCount}}</div>
+                                <div ng-if="!loadedApplicantCount" class="loader-small-orange"></div>
+                                <div>Applicants</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#/applicants">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-red" ng-init="loadExams()">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-list-alt fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{examCount}}</div>
+                                <div ng-if="!loadedExamCount" class="loader-small-red"></div>
+                                <div>Exams</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#/exams">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 center" style="padding-top: 20px">
+                <button ng-if="!creatingFile" class="btn btn-default" ng-click="createBackup()">Back up Data <img src="img/copy-icon.png" width="50px" height="50px"/></button>
+                
+                <button ng-if="creatingFile" class="btn btn-default" disable >Retrieving data... <img src="img/copy-icon.png" width="50px" height="50px"/></button>
+                
+            </div>
+            <div ng-if="creatingFile" class="col-lg-12 center" style="padding-top: 20px">
+                <div class="loader-small-blue center" style="margin-right:auto"></div>
+            </div>
+            <div class="col-lg-12 center" style="padding-top: 20px">
+                <a class="btn btn-info" ng-if="showDownloadURL" ng-href="{{downloadURL}}" href="" download="{{fileName}}">Download {{fileName}}</a>
+            </div>
+        </div>
+    </div>
+    <!--/ .page-wrapper -->
+</div>

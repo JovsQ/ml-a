@@ -1,0 +1,305 @@
+<div id="wrapper">
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top idt-green" role="navigation" style="margin-bottom: 0" ng-controller="NavbarController as navbar" ng-init="navbar.init()">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand white" href="#/home">Ideyatech Exam App Admin Dashboard</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <!-- /.dropdown -->
+            <li class="dropdown"  uib-dropdown is-open="status.isopen">
+                <a id="dropdown-btn" class="dropdown-toggle white" uib-dropdown-toggle ng-disabled="disabled">{{user.currentUser}}
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="dropdown-btn">
+                    <li role="menuitem">
+                        <a href="#/home"><i class="fa fa-user fa-fw"></i> Account </a>
+                    </li>
+                    <li role="menuitem"><a href="#/settings">
+                        <i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-click="processLogout()">
+                        <a><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="#/home" class="black"><i class="fa fa-home fa-fw"></i> Home</a>
+                    </li>
+                    <li>
+                        <a href="#/categories" class="black active"><i class="fa fa-tasks fa-fw"></i> Categories</a>
+                    </li>
+                    <li>
+                        <a href="#/questions" class="black"><i class="fa fa-bar-chart-o fa-fw"></i> Questions</a>
+                    </li>
+                    <li>
+                        <a href="#/exams" class="black"><i class="fa fa-file-text fa-fw"></i> Exam Sets</a>
+                    </li>
+                    <li>
+                        <a class="black" href="#/applicants"><i class="fa fa-list-alt fa-fw"></i> Applicants</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+
+    <!-- Alert template -->
+    <script type="text/ng-template" id="alert.html">
+        <div ng-transclude>
+        </div>
+    </script>
+    <!--/ Alert template -->
+    
+    <div id="page-wrapper" ng-init="loadCategories()">
+        <div ng-if="!loadedCategories" style="padding-top: 20%"></div>
+        <div ng-if="!loadedCategories"  class="loader"></div> 
+        <span ng-if="loadedCategories">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2 class="header-page">Categories</h2>
+            </div>
+            <div class="col-lg-2">
+                <h2 class="header-page">
+                    <button type="button" class="btn btn-success pull-right" ng-click="openAddModal()"><i class="fa fa-plus"></i> Add Category</button>
+                </h2>
+            </div>
+            <div class="col-lg-2">
+                <h2 class="header-page">
+                    <button type="button" class="btn btn-success pull-right" ng-click="openAddSubcategoryModal()"><i class="fa fa-plus"></i> Add Subcategory</button>
+                </h2>
+            </div>
+        </div>
+        
+        <hr class="header-break" />
+        
+        <!-- Alert -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div uib-alert ng-repeat="alert in alerts" ng-class="alert.type" close="closeAlert($index)">{{alert.msg}}</div>
+            </div>
+        </div>
+        <!--/ Alert -->
+
+        
+        <div class="row">
+            <div class="col-lg-6" style="">
+                <ul style="display: inline-block;" uib-pagination total-items="pagination.totalItems" ng-model="pagination.currentPage" max-size="pagination.pageMaxSize" ng-change="pageChanged()" class="pagination" boundary-link-numbers="true" items-per-page="pagination.itemsPerPage"></ul>        
+            </div>
+            <div class="col-lg-6" style="">
+                <span style="">Display per page <select style="" ng-model="pagination.itemsPerPage" class="form-control">
+                    <option ng-selected="true" value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                </select></span>
+                
+                
+            </div>
+        </div>
+        <!-- Category Table -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered" >
+                        <thead>
+                            <tr>
+                                <th class="col-md-2"><a class="black" ng-click="sortBy('category_name')">Name <i ng-if="!reverseSort && sortPropertyName=='category_name'" class="fa fa-long-arrow-up" aria-hidden="true"></i><i ng-if="reverseSort && sortPropertyName=='category_name'" class="fa fa-long-arrow-down" aria-hidden="true"></i></a></th>
+                                <th class="col-md-1">Time Limit (mins.)</th>
+                                <th class="col-md-4">Description</th>
+                                <th class="col-md-1"><a class="black" ng-click="sortBy('questions')">No. of Questions <i ng-if="!reverseSort && sortPropertyName=='questions'" class="fa fa-long-arrow-up" aria-hidden="true"></i><i ng-if="reverseSort && sortPropertyName=='questions'" class="fa fa-long-arrow-down" aria-hidden="true"></i></a></th>
+                                <th class="col-md-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="category in filteredCategories track by $index" id="category.key">
+                                <td ng-if="category.isSubcategory" ng-class="{'right': category.isSubcategory}"><span ng-if="category.isSubcategory">- <a href="#/categories/{{category.category_key}}">{{category.category_name}}</a></span></td>
+                                <td ng-if="!category.isSubcategory"><a href="#/categories/{{category.key}}">{{category.category_name}}</a></td>
+                                <td>{{category.time_limit}}</td>
+                                <td>{{category.category_desc}}</td>
+                                <td><span ng-if="category.questions != 0">{{category.questions}}</span></td>
+                                <td>
+                                    <button ng-if="!category.isSubcategory" type="button" class="btn btn-default" ng-click="openEditModal(category.key, category)">Edit</button>
+                                    <button ng-if="!category.isSubcategory" type="button" class="btn btn-danger" ng-click="openDeleteModal(category.key, category)">Delete</button>
+                                    
+                                    <button ng-if="category.isSubcategory" type="button" class="btn btn-default" ng-click="openEditSubcategoryModal(category.key, category)">Edit</button>
+                                    <button ng-if="category.isSubcategory" type="button" class="btn btn-danger" ng-click="openDeleteSubcategoryModal(category.key, category)">Delete</button>
+                                    
+                                </td>
+                            </tr>
+                            <tr ng-if="isEmpty">
+                                <td colspan="5" class="center">No categories found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Table row -->  
+        </span>
+    </div>
+    <!--/ Page wrapper -->
+</div>
+
+<!-- Add Category Modal -->
+<script type="text/ng-template" id="views/addCategoryModal.html">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="$ctrl.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add a category</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input type="text" class="form-control" id="$ctrl.categoryName" ng-model="$ctrl.categoryName" placeholder="Name" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="timeLimitInput">Time Limit (in minutes)</label>
+            <input type="number" class="form-control" id="timeLimitInput" ng-model="$ctrl.timeLimit" placeholder="Time Limit" required />
+          </div>
+          <div class="form-group">
+            <label for="descriptionInput">Description</label>
+            <textarea class="form-control" rows="3" ng-model="$ctrl.categoryDesc" required></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$ctrl.cancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="$ctrl.ok()">Save</button>
+      </div>
+    </div>
+</script>
+<!--/ Add Category Modal -->
+
+<!-- Edit Category Modal -->
+<script type="text/ng-template" id="views/editCategoryModal.html">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="$ctrl.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit category</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input type="text" class="form-control" value="$ctrl.categoryName" ng-model="$ctrl.categoryName" placeholder="Name" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="timeLimitInput">Time Limit (in minutes)</label>
+            <input type="text" class="form-control" ng-model="$ctrl.timeLimit" placeholder="Time Limit" required />
+          </div>
+          <div class="form-group">
+            <label for="descriptionInput">Description</label>
+            <textarea class="form-control" rows="3" ng-model="$ctrl.categoryDesc"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$ctrl.cancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="$ctrl.ok()">Save changes</button>
+      </div>
+    </div>
+</script>
+<!-- /Edit Category Modal -->
+
+<!-- Confirm Delete Modal -->
+<script type="text/ng-template" id="views/deleteCategoryModal.html">
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" ng-click="$ctrl.cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>   
+        <h4 class="modal-title">Are you sure you want to delete?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Once you do this there's no going back.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$ctrl.cancel()">Cancel</button>
+        <button type="button" class="btn btn-danger" ng-click="$ctrl.ok()">Delete</button>
+      </div>
+    </div>
+</script>
+<!-- /Confirm Delete Modal -->
+
+<!-- Add Subcategory Modal -->
+<script type="text/ng-template" id="views/addSubcategoryModal.html">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="$ctrl.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add a subcategory</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input type="text" class="form-control" id="$ctrl.subcategoryName" ng-model="$ctrl.subcategoryName" placeholder="Name" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="descriptionInput">Description</label>
+            <textarea class="form-control" rows="3" ng-model="$ctrl.subcategoryDesc"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Parent Category</label>
+            <select id="parentCategory" ng-model="$ctrl.parentCategory" class="form-control" ng-options="category.category_name for category in $ctrl.categories" required>
+                <option value='' selected="true" disabled="disabled">Choose category</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$ctrl.cancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="$ctrl.ok()">Save</button>
+      </div>
+    </div>
+</script>
+<!--/ Add Subcategory Modal -->
+
+<!-- Edit Subcategory Modal -->
+<script type="text/ng-template" id="views/editSubcategoryModal.html">
+    <div class="modal-content"> 
+      <div class="modal-header">
+        <button type="button" class="close" aria-label="Close" ng-click="$ctrl.cancel()"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit category</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="nameInput">Name</label>
+            <input type="text" class="form-control" value="$ctrl.categoryName" ng-model="$ctrl.categoryName" placeholder="Name" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="descriptionInput">Description</label>
+            <textarea class="form-control" rows="3" ng-model="$ctrl.categoryDesc"></textarea>
+          </div>
+            <div class="form-group">
+            <label>Parent Category</label>
+            <select id="parentCategory" ng-model="$ctrl.parentCategory" class="form-control" ng-options="category.category_name for category in $ctrl.categories" required>
+                <option value='' selected="true" disabled="disabled">Choose category</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="$ctrl.cancel()">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="$ctrl.ok()">Save changes</button>
+      </div>
+    </div>
+</script>
+<!-- /Edit Subcategory Modal -->

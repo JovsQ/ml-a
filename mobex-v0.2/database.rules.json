@@ -1,0 +1,21 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "category": {
+      ".indexOn": "category_name"
+    },
+    "question": {
+      ".indexOn": "category_name"
+    },
+    "subcategory": {
+      ".indexOn" : ["parent_category", "category_name"]
+    },
+    "applicant": {
+      ".indexOn" : "email"
+    },
+	"temp": {
+      ".indexOn" : "email"
+    }
+  }
+}
